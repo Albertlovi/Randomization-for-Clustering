@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -8,10 +9,9 @@ from sklearn.metrics import calinski_harabasz_score
 X = pd.read_csv('datasets/Dataset6.csv', sep=';', header=None).values  # Ensure X is a NumPy array
 print(X)
 
-# Initialize random centers
-np.random.seed(53)  # For reproducibility
-k = 5  # Number of clusters
-initial_centers = X[np.random.choice(range(len(X)), k, replace=False)]
+# Ensure the results folder exists
+results_folder = "results_Lloyd"
+os.makedirs(results_folder, exist_ok=True)
 
 # Helper function to plot and save a frame for GIF
 def plot_kmeans(X, centers, labels, iteration, images):
@@ -29,47 +29,66 @@ def plot_kmeans(X, centers, labels, iteration, images):
     buffer.seek(0)
     images.append(Image.open(buffer))
 
-# Simulate Lloyd's algorithm manually for GIF creation
-images = []
-current_centers = initial_centers
-labels = np.zeros(X.shape[0])
+# Lloyd's algorithm for K-Means
+def kmeans_lloyds(X, k, max_iter=100, tol=1e-4):
+    np.random.seed(42)  # For reproducibility
+    centers = X[np.random.choice(len(X), k, replace=False)]
+    labels = np.zeros(len(X))
+    images = []
 
-for iteration in range(15):  # Set max iterations
-    # Assign points to nearest center
-    distances = np.linalg.norm(X[:, np.newaxis] - current_centers, axis=2)
-    labels = np.argmin(distances, axis=1)
+    for iteration in range(max_iter):
+        # Step 1: Assign points to the nearest center
+        distances = np.linalg.norm(X[:, np.newaxis] - centers, axis=2)  # Compute distances to each center
+        labels = np.argmin(distances, axis=1)  # Assign each point to the nearest center
 
-    # Capture the current state
-    plot_kmeans(X, current_centers, labels, iteration, images)
+        # Step 2: Capture current state for visualization
+        plot_kmeans(X, centers, labels, iteration, images)
 
-    # Update centers
-    new_centers = np.array([X[labels == i].mean(axis=0) if len(X[labels == i]) > 0 else current_centers[i] for i in range(k)])
-    
-    # Break if centers do not change
-    if np.allclose(current_centers, new_centers):
-        break
-    current_centers = new_centers
+        # Step 3: Update centers
+        new_centers = np.array([
+            X[labels == i].mean(axis=0) if np.any(labels == i) else centers[i]  # Handle empty clusters
+            for i in range(k)
+        ])
 
-# Save as GIF
+        # Step 4: Check for convergence
+        if np.allclose(centers, new_centers, atol=tol):
+            print(f"Converged at iteration {iteration}")
+            break
+        centers = new_centers
+
+    return centers, labels, images, iteration
+
+# Run K-Means
+k = 3  # Number of clusters
+final_centers, final_labels, images, final_iteration = kmeans_lloyds(X, k)
+
+# Save the GIF
+gif_filename = os.path.join(results_folder, 'kmeans_evolution.gif')
 images[0].save(
-    'kmeans_evolution.gif',
+    gif_filename,
     save_all=True,
     append_images=images[1:],
     loop=0,
     duration=500
 )
+print(f"GIF saved as '{gif_filename}'")
 
-print("GIF saved as 'kmeans_evolution.gif'")
+# Save the final clustering visualization
+def save_final_plot(X, centers, labels, output_path):
+    fig, ax = plt.subplots()
+    scatter = ax.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis', alpha=0.6)
+    ax.scatter(centers[:, 0], centers[:, 1], c='red', marker='x', s=100, label='Centers')
+    ax.set_title(f"Final Clustering (at iteration {final_iteration})")
+    ax.legend()
+    fig.savefig(output_path)
+    plt.close(fig)
 
-
+final_plot_filename = os.path.join(results_folder, 'final_clustering.png')
+save_final_plot(X, final_centers, final_labels, final_plot_filename)
+print(f"Final clustering image saved as '{final_plot_filename}'")
 
 # Calculate the Calinski–Harabasz index
-def calculate_ch_index(X, labels):
-    return calinski_harabasz_score(X, labels)
-
-
-# Compute the Calinski-Harabasz index
-ch_index = calculate_ch_index(X, labels)
+ch_index = calinski_harabasz_score(X, final_labels)
 print(f"Calinski–Harabasz Index: {ch_index}")
 
 
