@@ -1,0 +1,13 @@
+https://towardsdatascience.com/three-versions-of-k-means-cf939b65f4ea #Medium article 3 types K-mean 28/11
+
+http://theory.stanford.edu/~sergei/papers/kMeans-socg.pdf #Paper convergence speed Lloyd's algorithm 28/11
+
+Stuart P. Lloyd. Least squares quantization in pcm.
+IEEE Transactions on Information Theory,
+28(2):129–136, 1982.  #Lloyd's idea of the algorithm
+
+https://medium.com/@kelvinlinBU/k-means-clustering-with-python-4b0068a47d70 #Medium algoritme gif Lloyd 26/11
+
+https://www.datanovia.com/en/lessons/determining-the-optimal-number-of-clusters-3-must-know-methods/ #Different calculation k 28/11
+
+
