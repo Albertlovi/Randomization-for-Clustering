@@ -8,7 +8,7 @@ from Lloyd_auxiliary_functions import save_experiment_results
 
 # Load the dataset
 df = pd.read_csv('datasets/Dataset6.csv', sep=';', header=None).values  
-k = 3 # Number of clusters
+k = 5 # Number of clusters
 experiments = {} # Dictionary to store experiment results
 
 # Perform T experiments
