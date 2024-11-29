@@ -18,7 +18,7 @@ for i in range(T):
     initial_centers = df[np.random.choice(len(df), k, replace=False)]
     
     # Initialize and fit K-Means with these initial centers
-    kmeans = KMeans(n_clusters=3, init=initial_centers, n_init=1, max_iter=100, random_state=None)
+    kmeans = KMeans(n_clusters=k, init=initial_centers, n_init=1, max_iter=100, random_state=None)
     kmeans.fit(df)
     
     # Calculate Calinski-Harabasz score
