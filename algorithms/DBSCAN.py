@@ -13,4 +13,4 @@ eps = 0.3
 min_samples = 10
 
 # Save DBSCAN results
-save_dbscan_results(X, eps, min_samples, results_folder, experiment_type="DBSCAN")
+save_dbscan_final_plot(X, eps, min_samples, results_folder, experiment_type="DBSCAN")
