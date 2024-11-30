@@ -40,7 +40,7 @@ median_index = len(all_ch_indices) // 2
 median_experiment = experiments[all_ch_indices[median_index][0]]
 
 # Save results for each type of experiment in the desired folder
-results_folder = "algorithms/Lloyd_results"
+results_folder = "algorithms/Results_Lloyd"
 os.makedirs(results_folder, exist_ok=True)
 
 save_experiment_results(df, min_experiment, results_folder, "Worst experiment")
