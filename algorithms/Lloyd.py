@@ -8,7 +8,7 @@ from Lloyd_auxiliary_functions import save_experiment_results
 
 # Load the dataset
 df = pd.read_csv('datasets/Dataset6.csv', sep=';', header=None).values  
-k = 3 # Number of clusters
+k = 5 # Number of clusters
 experiments = {} # Dictionary to store experiment results
 
 # Perform T experiments
@@ -18,7 +18,7 @@ for i in range(T):
     initial_centers = df[np.random.choice(len(df), k, replace=False)]
     
     # Initialize and fit K-Means with these initial centers
-    kmeans = KMeans(n_clusters=3, init=initial_centers, n_init=1, max_iter=100, random_state=None)
+    kmeans = KMeans(n_clusters=k, init=initial_centers, n_init=1, max_iter=100, random_state=None)
     kmeans.fit(df)
     
     # Calculate Calinski-Harabasz score
@@ -40,7 +40,7 @@ median_index = len(all_ch_indices) // 2
 median_experiment = experiments[all_ch_indices[median_index][0]]
 
 # Save results for each type of experiment in the desired folder
-results_folder = "algorithms/Lloyd_results"
+results_folder = "algorithms/Results_Lloyd"
 os.makedirs(results_folder, exist_ok=True)
 
 save_experiment_results(df, min_experiment, results_folder, "Worst experiment")

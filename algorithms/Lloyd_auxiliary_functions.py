@@ -56,7 +56,8 @@ def kmeans_iteration_by_iteration(df, k, initial_centers, max_iter=100, tol=1e-4
 
 def save_experiment_results(df, experiment, results_folder, experiment_type):
     '''
-    This function saves a .gif file with the evolution of a given experiment.
+    This function saves a .gif file with the evolution of a given experiment. Additionally, it saves a .png image of 
+    the finall clustering of the experiment.
     '''
     print(f'Saving results for {experiment_type}')
     initial_centers = experiment["initial_centers"]
