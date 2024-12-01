@@ -1,10 +1,7 @@
 import pandas as pd 
-from sklearn import datasets
 from sklearn.cluster import KMeans
 from yellowbrick.cluster import KElbowVisualizer
 
-# Load the IRIS dataset
-iris = datasets.load_iris()
 df = pd.read_csv('datasets/Dataset6.csv', sep=';', header=None).values 
 
 # Instantiate the clustering model and visualizer
