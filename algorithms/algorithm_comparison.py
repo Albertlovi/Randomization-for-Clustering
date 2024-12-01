@@ -83,16 +83,7 @@ datasets = [
             "xi": 0.1,
         },
     ),
-    (
-        varied,
-        {
-            "eps": 0.18,
-            "n_neighbors": 2,
-            "min_samples": 7,
-            "xi": 0.01,
-            "min_cluster_size": 0.2,
-        },
-    ),
+    #(varied,{"eps": 0.18,"n_neighbors": 2,"min_samples": 7,"xi": 0.01,"min_cluster_size": 0.2,},),
     (
         aniso,
         {
@@ -103,8 +94,8 @@ datasets = [
             "min_cluster_size": 0.2,
         },
     ),
-    (blobs, {"min_samples": 7, "xi": 0.1, "min_cluster_size": 0.2}),
-    (no_structure, {}),
+    #(blobs, {"min_samples": 7, "xi": 0.1, "min_cluster_size": 0.2}),
+    #(no_structure, {}),
 ]
 
 for i_dataset, (dataset, algo_params) in enumerate(datasets):
@@ -174,17 +165,17 @@ for i_dataset, (dataset, algo_params) in enumerate(datasets):
     )
 
     clustering_algorithms = (
-        ("MiniBatch\nKMeans", two_means),
-        ("Affinity\nPropagation", affinity_propagation),
-        ("MeanShift", ms),
-        ("Spectral\nClustering", spectral),
-        ("Ward", ward),
-        ("Agglomerative\nClustering", average_linkage),
+        ("KMeans", two_means),
+        #("Affinity\nPropagation", affinity_propagation),
+        #("MeanShift", ms),
+        #("Spectral\nClustering", spectral),
+        #("Ward", ward),
+        #("Agglomerative\nClustering", average_linkage),
         ("DBSCAN", dbscan),
-        ("HDBSCAN", hdbscan),
-        ("OPTICS", optics),
-        ("BIRCH", birch),
-        ("Gaussian\nMixture", gmm),
+        #("HDBSCAN", hdbscan),
+        #("OPTICS", optics),
+        #("BIRCH", birch),
+        ("Gaussian Mixture", gmm),
     )
 
     for name, algorithm in clustering_algorithms:
@@ -248,11 +239,15 @@ for i_dataset, (dataset, algo_params) in enumerate(datasets):
         plt.text(
             0.99,
             0.01,
-            ("%.2fs" % (t1 - t0)).lstrip("0"),
+            '',
+            #("%.2fs" % (t1 - t0)).lstrip("0"),
             transform=plt.gca().transAxes,
             size=15,
             horizontalalignment="right",
         )
         plot_num += 1
+        
+# Save the resulting plot as a PNG image
+plt.savefig("algorithms/algorithm_comparison.png", dpi=300, bbox_inches='tight')
 
 plt.show()
