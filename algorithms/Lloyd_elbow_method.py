@@ -11,4 +11,4 @@ visualizer = KElbowVisualizer(km, k=(2, maximum_k))
  
 visualizer.fit(df)    
 visualizer.show()
-    
+

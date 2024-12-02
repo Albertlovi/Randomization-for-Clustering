@@ -5,16 +5,18 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import calinski_harabasz_score
 from Lloyd_auxiliary_functions import save_experiment_results
 
-
 # Load the dataset
 df = pd.read_csv('datasets/Dataset6.csv', sep=';', header=None).values  
 k = 5 # Number of clusters
-experiments = {} # Dictionary to store experiment results
+
+# Variables to track the best experiment
+best_ch_index = -np.inf  # Start with a very low score
+best_initial_centers = None
 
 # Perform T experiments
 T = 100
 for i in range(T):
-    # Generate k random initial centers 
+    # Generate k random initial centers
     initial_centers = df[np.random.choice(len(df), k, replace=False)]
     
     # Initialize and fit K-Means with these initial centers
@@ -25,25 +27,17 @@ for i in range(T):
     labels = kmeans.labels_
     ch_index = calinski_harabasz_score(df, labels)
     
-    # Save the results in the experiments dictionary
-    experiments[i] = {
-        "initial_centers": initial_centers,
-        "ch_index": ch_index
-    }
+    # If the current experiment has a better score, update the best experiment
+    if ch_index > best_ch_index:
+        best_ch_index = ch_index
+        best_initial_centers = initial_centers
 
-# Find the best, worst, and median experiments
-all_ch_indices = [(i, exp["ch_index"]) for i, exp in experiments.items()]
-all_ch_indices.sort(key=lambda x: x[1])  
-min_experiment = experiments[all_ch_indices[0][0]]
-max_experiment = experiments[all_ch_indices[-1][0]]
-median_index = len(all_ch_indices) // 2
-median_experiment = experiments[all_ch_indices[median_index][0]]
-
-# Save results for each type of experiment in the desired folder
+# Save results for the best experiment
 results_folder = "algorithms/Results_Lloyd"
 os.makedirs(results_folder, exist_ok=True)
 
-save_experiment_results(df, min_experiment, results_folder, "Worst experiment")
-save_experiment_results(df, max_experiment, results_folder, "Best experiment")
-save_experiment_results(df, median_experiment, results_folder, "Median experiment")
+# Save the best experiment results
+save_experiment_results(df, {"initial_centers": best_initial_centers, "ch_index": best_ch_index}, results_folder, "Best experiment")
+
+
 
