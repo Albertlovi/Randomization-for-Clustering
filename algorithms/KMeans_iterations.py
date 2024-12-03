@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.metrics import calinski_harabasz_score
-from Lloyd_auxiliary_functions import save_experiment_results
+from algorithms.KMeans_auxiliary_functions import save_experiment_results
 
 # Load the dataset
 df = pd.read_csv('datasets/Dataset6.csv', sep=';', header=None).values  
