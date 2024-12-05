@@ -1,6 +1,5 @@
 from sklearn.cluster import KMeans
 from sklearn.mixture import GaussianMixture
-from sklearn.cluster import DBSCAN
 from sklearn.metrics import adjusted_rand_score
 import pandas as pd
 
@@ -39,15 +38,3 @@ ari_gmm = adjusted_rand_score(ground_truth, labels_gmm)
 
 # Print the Adjusted Rand Index
 print(f"The Adjusted Rand Index between ground truth and GMM is: {ari_gmm}")
-
-
-# DBSCAN
-# Fit DBSCAN with 7 clusters
-db = DBSCAN(eps=0.3, min_samples=10)
-labels_db = db.fit_predict(Y.iloc[:, :-1])
-
-# Calculate the Adjusted Rand Index between the ground truth and DBSCAN labels
-ari_db = adjusted_rand_score(ground_truth, labels_db)
-
-# Print the Adjusted Rand Index
-print(f"The Adjusted Rand Index between ground truth and DBSCAN is: {ari_db}")
