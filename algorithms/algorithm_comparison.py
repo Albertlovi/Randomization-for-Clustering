@@ -9,10 +9,9 @@ from sklearn import cluster, datasets, mixture
 from sklearn.neighbors import kneighbors_graph
 from sklearn.preprocessing import StandardScaler
 
-# ============
+
 # Generate datasets. We choose the size big enough to see the scalability
 # of the algorithms, but not too big to avoid too long running times
-# ============
 n_samples = 500
 seed = 30
 noisy_circles = datasets.make_circles(
@@ -30,14 +29,12 @@ transformation = [[0.6, -0.6], [-0.4, 0.8]]
 X_aniso = np.dot(X, transformation)
 aniso = (X_aniso, y)
 
-# blobs with varied variances
+# Blobs with varied variances
 varied = datasets.make_blobs(
     n_samples=n_samples, cluster_std=[1.0, 2.5, 0.5], random_state=random_state
 )
 
-# ============
 # Set up cluster parameters
-# ============
 plt.figure(figsize=(9 * 2 + 3, 13))
 plt.subplots_adjust(
     left=0.02, right=0.98, bottom=0.001, top=0.95, wspace=0.05, hspace=0.01
@@ -83,7 +80,6 @@ datasets = [
             "xi": 0.1,
         },
     ),
-    #(varied,{"eps": 0.18,"n_neighbors": 2,"min_samples": 7,"xi": 0.01,"min_cluster_size": 0.2,},),
     (
         aniso,
         {
@@ -94,70 +90,35 @@ datasets = [
             "min_cluster_size": 0.2,
         },
     ),
-    #(blobs, {"min_samples": 7, "xi": 0.1, "min_cluster_size": 0.2}),
-    #(no_structure, {}),
 ]
 
 for i_dataset, (dataset, algo_params) in enumerate(datasets):
-    # update parameters with dataset-specific values
+    # Update parameters with dataset-specific values
     params = default_base.copy()
     params.update(algo_params)
 
     X, y = dataset
 
-    # normalize dataset for easier parameter selection
+    # Normalize dataset for easier parameter selection
     X = StandardScaler().fit_transform(X)
 
-    # estimate bandwidth for mean shift
+    # Estimate bandwidth for mean shift
     bandwidth = cluster.estimate_bandwidth(X, quantile=params["quantile"])
 
-    # connectivity matrix for structured Ward
+    # Connectivity matrix for structured Ward
     connectivity = kneighbors_graph(
         X, n_neighbors=params["n_neighbors"], include_self=False
     )
     # make connectivity symmetric
     connectivity = 0.5 * (connectivity + connectivity.T)
 
-    # ============
+
     # Create cluster objects
-    # ============
-    ms = cluster.MeanShift(bandwidth=bandwidth, bin_seeding=True)
     two_means = cluster.MiniBatchKMeans(
         n_clusters=params["n_clusters"],
         random_state=params["random_state"],
     )
-    ward = cluster.AgglomerativeClustering(
-        n_clusters=params["n_clusters"], linkage="ward", connectivity=connectivity
-    )
-    spectral = cluster.SpectralClustering(
-        n_clusters=params["n_clusters"],
-        eigen_solver="arpack",
-        affinity="nearest_neighbors",
-        random_state=params["random_state"],
-    )
     dbscan = cluster.DBSCAN(eps=params["eps"])
-    hdbscan = cluster.HDBSCAN(
-        min_samples=params["hdbscan_min_samples"],
-        min_cluster_size=params["hdbscan_min_cluster_size"],
-        allow_single_cluster=params["allow_single_cluster"],
-    )
-    optics = cluster.OPTICS(
-        min_samples=params["min_samples"],
-        xi=params["xi"],
-        min_cluster_size=params["min_cluster_size"],
-    )
-    affinity_propagation = cluster.AffinityPropagation(
-        damping=params["damping"],
-        preference=params["preference"],
-        random_state=params["random_state"],
-    )
-    average_linkage = cluster.AgglomerativeClustering(
-        linkage="average",
-        metric="cityblock",
-        n_clusters=params["n_clusters"],
-        connectivity=connectivity,
-    )
-    birch = cluster.Birch(n_clusters=params["n_clusters"])
     gmm = mixture.GaussianMixture(
         n_components=params["n_clusters"],
         covariance_type="full",
@@ -166,22 +127,13 @@ for i_dataset, (dataset, algo_params) in enumerate(datasets):
 
     clustering_algorithms = (
         ("KMeans", two_means),
-        #("Affinity\nPropagation", affinity_propagation),
-        #("MeanShift", ms),
-        #("Spectral\nClustering", spectral),
-        #("Ward", ward),
-        #("Agglomerative\nClustering", average_linkage),
         ("DBSCAN", dbscan),
-        #("HDBSCAN", hdbscan),
-        #("OPTICS", optics),
-        #("BIRCH", birch),
         ("Gaussian Mixture", gmm),
     )
 
     for name, algorithm in clustering_algorithms:
         t0 = time.time()
 
-        # catch warnings related to kneighbors_graph
         with warnings.catch_warnings():
             warnings.filterwarnings(
                 "ignore",
@@ -228,7 +180,7 @@ for i_dataset, (dataset, algo_params) in enumerate(datasets):
                 )
             )
         )
-        # add black color for outliers (if any)
+        # Add black color for outliers (if any)
         colors = np.append(colors, ["#000000"])
         plt.scatter(X[:, 0], X[:, 1], s=10, color=colors[y_pred])
 
@@ -240,7 +192,6 @@ for i_dataset, (dataset, algo_params) in enumerate(datasets):
             0.99,
             0.01,
             '',
-            #("%.2fs" % (t1 - t0)).lstrip("0"),
             transform=plt.gca().transAxes,
             size=15,
             horizontalalignment="right",
@@ -249,5 +200,4 @@ for i_dataset, (dataset, algo_params) in enumerate(datasets):
         
 # Save the resulting plot as a PNG image
 plt.savefig("algorithms/algorithm_comparison.png", dpi=300, bbox_inches='tight')
-
 plt.show()
