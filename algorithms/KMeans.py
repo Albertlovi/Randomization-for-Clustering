@@ -47,4 +47,3 @@ save_kmeans_clustering_final_plot(X, labels_kmeans, centers=centers_kmeans, resu
 print('The Calisnski-Harabasz score of KMeans is ', calinski_harabasz_score(X, labels_kmeans)) # C-H index
 
 print('The Silhouette score of KMeans is', silhouette_score(X, labels_kmeans)) # Silhouette score
-

@@ -33,6 +33,3 @@ results_folder = "algorithms/Results_Lloyd"
 os.makedirs(results_folder, exist_ok=True)
 
 save_experiment_results(df, {"initial_centers": best_initial_centers, "ch_index": best_ch_index}, results_folder, "Best experiment")
-
-
-

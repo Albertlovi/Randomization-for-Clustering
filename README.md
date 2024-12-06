@@ -9,5 +9,12 @@ facilitate a more intuitive interpretation of the algorithms and their results.
 The datasets folder contains custom datasets used across the different methods. Specifically, we include two distinct 
 datasets to analyze different aspects of clustering performance.
 
-The algorithms folder contains all the important code related to the three clustering algorithms studied. In order to run the algorithms we need to execute the Lloyd.py, DBSCAN.py and ().py files. Once they are executed, the corresponding results for this methods will appear in the folder of each method. Depending on the algorithm, the different folders for the methods also contain ready to run scripts regarding different metrics or implementations. 
+The algorithms folder contains all the important code related to the different clustering algorithms studied. In order 
+to run the algorithms, we need to execute the Lloyd.py, KMeans.py, DBSCAN.py, and GMM.py files. Once they are executed, 
+the corresponding results for these methods will appear in the respective Results folder.
 
+Apart from the above main files, there are other scripts ready to run. The KMeans_elbow_method.py file performs the 
+elbow method for KMeans. The algorithm_comparison.py file compares the KMeans, DBSCAN, and Gaussian Mixture algorithms 
+on three different datasets and saves the results in the algorithm_comparison.png file. Finally, the 
+Rand_Score_Comparison.py file calculates the Rand Score Indexes for the KMeans and Gaussian Mixture Models based on a 
+ground-truth dataset containing the correct labels for the data points.
