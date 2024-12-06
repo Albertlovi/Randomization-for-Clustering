@@ -25,7 +25,6 @@ def save_kmeans_clustering_final_plot(X, labels, centers=None, results_folder="r
     scaler = StandardScaler()
     data_scaled = scaler.fit_transform(X)
 
-    # Create a plot
     fig, ax = plt.subplots(figsize=(8, 6))
     unique_labels = set(labels)
     
@@ -60,13 +59,9 @@ def save_kmeans_clustering_final_plot(X, labels, centers=None, results_folder="r
             label='Centers'
         )
 
-    # Add title and legend
     ax.set_title(f"{experiment_type} final clustering")
-
-    # Ensure the results folder exists
     os.makedirs(results_folder, exist_ok=True)
 
-    # Save final clustering visualization
     final_plot_filename = os.path.join(results_folder, f'{experiment_type}.png')
     fig.savefig(final_plot_filename)
     plt.close(fig)

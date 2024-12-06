@@ -3,7 +3,6 @@ import pandas as pd
 from DBSCAN_auxiliar_functions import *
 from sklearn.metrics import calinski_harabasz_score, silhouette_score
 
-# Load dataset
 dataset_path = 'datasets/Dataset6.csv'
 X = pd.read_csv(dataset_path, sep=';', header=None).values
 

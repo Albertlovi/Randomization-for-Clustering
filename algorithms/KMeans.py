@@ -9,7 +9,7 @@ X = pd.read_csv('datasets/Dataset6.csv', sep=';', header=None).values
 
 # Compute Calinski–Harabasz scores for different numbers of clusters
 scores = []
-n_clusters_range = range(2, 11)  # Try clusters from 2 to 10
+n_clusters_range = range(2, 11)  
 
 for n_clusters in n_clusters_range:
     kmeans = KMeans(n_clusters=n_clusters, random_state=42)
@@ -17,7 +17,6 @@ for n_clusters in n_clusters_range:
     score = calinski_harabasz_score(X, labels)
     scores.append(score)
 
-# Plot the scores
 plt.figure(figsize=(8, 4))
 plt.plot(n_clusters_range, scores, marker='o')
 plt.xlabel("Number of Clusters (k)")
@@ -27,11 +26,8 @@ plt.title("Calinski–Harabasz Index for KMeans")
 results_folder = "algorithms/Results_KMeans"
 os.makedirs(results_folder, exist_ok=True)
 
-# Save the plot in the specified folder
 final_plot_filename = os.path.join(results_folder, "calinski_harabasz_scores_kmeans.png")
 plt.savefig(final_plot_filename)
-
-# Close the plot to release memory
 plt.close()
 
 # Identify the optimal number of clusters
