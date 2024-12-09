@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_kmeans_experiment(df, centers, labels, iteration, images, title_prefix=""):
+def plot_kmeans_experiment(df, centers, labels, iteration, images, title_prefix="", show_plot=False):
     '''
     This function plots a given clustering in a given iteration of the K-Means algorithm.
     '''
@@ -13,7 +13,9 @@ def plot_kmeans_experiment(df, centers, labels, iteration, images, title_prefix=
     ax.scatter(centers[:, 0], centers[:, 1], c='red', marker='x', s=100, label='Centers')
     ax.set_title(f"{title_prefix} iteration {iteration}")
     ax.legend()
-    plt.close(fig)
+
+    if show_plot:
+        plt.show()
 
     # Save figure to image buffer and append to the images list
     from io import BytesIO
@@ -21,9 +23,10 @@ def plot_kmeans_experiment(df, centers, labels, iteration, images, title_prefix=
     fig.savefig(buffer, format='png')
     buffer.seek(0)
     images.append(Image.open(buffer))
+    plt.close(fig)
 
 
-def kmeans_iteration_by_iteration(df, k, initial_centers, max_iter=100, tol=1e-4, title_prefix=""):
+def kmeans_iteration_by_iteration(df, k, initial_centers, max_iter=100, tol=1e-4, title_prefix="", show_plots=False):
     '''
     This funciton runs the K-Means clustering method for a specific experiment using its initial centers. At each 
     iteration of the process it saves the final picture. 
@@ -33,12 +36,11 @@ def kmeans_iteration_by_iteration(df, k, initial_centers, max_iter=100, tol=1e-4
     images = []
 
     for iteration in range(max_iter):
-        # Assign points to the nearest center
         distances = np.linalg.norm(df[:, np.newaxis] - centers, axis=2)  
         labels = np.argmin(distances, axis=1)  
 
         # Capture current state for visualization
-        plot_kmeans_experiment(df, centers, labels, iteration, images, title_prefix=title_prefix)
+        plot_kmeans_experiment(df, centers, labels, iteration, images, title_prefix=title_prefix, show_plot=show_plots)
 
         # Update centers
         new_centers = np.array([
@@ -65,7 +67,7 @@ def save_experiment_results(df, experiment, results_folder, experiment_type):
 
     # Run K-Means by iteration for this experiment
     final_centers, final_labels, images, final_iteration = kmeans_iteration_by_iteration(
-        df, k, initial_centers, title_prefix=experiment_type
+        df, k, initial_centers, title_prefix=experiment_type, show_plots = True
     )
 
     # Save GIF

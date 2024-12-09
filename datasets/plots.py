@@ -18,4 +18,4 @@ def plot_df(df: pd.DataFrame, sample_factor: float = 1):
 
 df = pd.read_csv('datasets/Dataset6.csv', sep=';', header=None)
 
-plot_df(df, 0.01)
+plot_df(df, 1)
