@@ -12,6 +12,8 @@ k = 5 # Number of clusters
 # Variables to track the best experiment
 best_ch_index = -np.inf 
 best_initial_centers = None
+worst_ch_index = np.inf 
+worst_initial_centers = None
 
 # Perform T experiments
 T = 100
@@ -27,9 +29,13 @@ for i in range(T):
     if ch_index > best_ch_index:
         best_ch_index = ch_index
         best_initial_centers = initial_centers
+    if ch_index < worst_ch_index:
+        worst_ch_index = ch_index
+        worst_initial_centers = initial_centers
 
 # Save results for the best experiment
 results_folder = "algorithms/Results_Lloyd"
 os.makedirs(results_folder, exist_ok=True)
 
 save_experiment_results(df, {"initial_centers": best_initial_centers, "ch_index": best_ch_index}, results_folder, "Best experiment")
+save_experiment_results(df, {"initial_centers": worst_initial_centers, "ch_index": worst_ch_index}, results_folder, "Worst experiment")

@@ -4,7 +4,7 @@ from sklearn.metrics import adjusted_rand_score
 import pandas as pd
 
 # Load the dataset
-Y = pd.read_csv('datasets/Dataset1.csv', sep=';', header=None)
+Y = pd.read_csv('datasets/Dataset3.csv', sep=';', header=None)
 
 Y = Y.applymap(lambda x: str(x).replace(',', '') if isinstance(x, str) else x)
 Y = Y.apply(pd.to_numeric, errors='coerce')
